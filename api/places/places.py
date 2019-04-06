@@ -6,11 +6,9 @@ import cv2
 import os
 from dbhelper.dbhelper import find_coordinates, occupy_space, free_space
 
-def get_all_places(img_str, minimun_confidence, threshold):
-    nparr = np.fromstring(img_str, np.uint8)
-    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+def get_all_places(image, minimun_confidence, threshold):
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
-    image = cv2.imdecode(np.fromstring(img_str, dtype=np.uint8), 1)
     labelsPath = os.path.sep.join(["yolo-coco", "coco.names"])
     LABELS = open(labelsPath).read().strip().split("\n")
 
@@ -24,7 +22,6 @@ def get_all_places(img_str, minimun_confidence, threshold):
     configPath = os.path.sep.join(["yolo-coco", "yolov3.cfg"])
 
     # load our YOLO object detector trained on COCO dataset (80 classes)
-    print("[INFO] loading YOLO from disk...")
     net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
     # load our input image and grab its spatial dimensions
@@ -47,9 +44,12 @@ def get_all_places(img_str, minimun_confidence, threshold):
     end = time.time()
 
     # show timing information on YOLO
-    print("[INFO] YOLO took {:.6f} seconds".format(end - start))
+    # print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
     coordinates = find_coordinates()
+    print()
+    print('COORDINATES', coordinates)
+    print()
 
     (w, h) = (15,15)
 
@@ -110,8 +110,9 @@ def get_all_places(img_str, minimun_confidence, threshold):
             # extract the bounding box coordinates
             (x, y) = (boxes[i][0], boxes[i][1])
             (w, h) = (boxes[i][2], boxes[i][3])
-    #         print((x, y))
-    #         print((w, h))
+            print((x, y))
+            print((w, h))
+            print()
             for coordinate in coordinates:
                 if coordinate[0] > x and coordinate[0] < x + w and coordinate[1] > y and coordinate[1] < y + h and LABELS[classIDs[i]] == "car":
                     # draw a bounding box rectangle and label on the image
@@ -120,9 +121,16 @@ def get_all_places(img_str, minimun_confidence, threshold):
                     # text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
                     # cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
                     #             0.5, color, 2)
-                    occupy_space(coordinate[3])
-                    occupied.append(coordinate[3])
+                    print()
+                    print(coordinate)
+                    print((x, y))
+                    print()
+                    occupy_space(coordinate[2])
+                    occupied.append(coordinate[2])
                     break
         for coordinate in coordinates:
             if coordinate[2] not in occupied:
                 free_space(coordinate[2])
+        return occupied
+
+    return "Nothing changed"
