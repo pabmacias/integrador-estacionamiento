@@ -47,9 +47,6 @@ def get_all_places(image, minimun_confidence, threshold):
     # print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
     coordinates = find_coordinates()
-    print()
-    print('COORDINATES', coordinates)
-    print()
 
     (w, h) = (15,15)
 
@@ -57,7 +54,10 @@ def get_all_places(image, minimun_confidence, threshold):
         (x, y) = (coordinates[i][0], coordinates[i][1])
         color = [234, 203, 92]
         cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-        text = "space"
+        text = str(i)
+        cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5, color, 2)
+    cv2.imwrite('test.jpg', image)
 
     # initialize our lists of detected bounding boxes, confidences, and
     # class IDs, respectively
@@ -110,21 +110,15 @@ def get_all_places(image, minimun_confidence, threshold):
             # extract the bounding box coordinates
             (x, y) = (boxes[i][0], boxes[i][1])
             (w, h) = (boxes[i][2], boxes[i][3])
-            print((x, y))
-            print((w, h))
-            print()
+            color = [int(c) for c in COLORS[classIDs[i]]]
+            # cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+            # text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
+            # cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+            #             0.5, color, 2)
+            # cv2.imwrite('test.jpg', image)
+
             for coordinate in coordinates:
                 if coordinate[0] > x and coordinate[0] < x + w and coordinate[1] > y and coordinate[1] < y + h and LABELS[classIDs[i]] == "car":
-                    # draw a bounding box rectangle and label on the image
-                    # color = [int(c) for c in COLORS[classIDs[i]]]
-                    # cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-                    # text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
-                    # cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
-                    #             0.5, color, 2)
-                    print()
-                    print(coordinate)
-                    print((x, y))
-                    print()
                     occupy_space(coordinate[2])
                     occupied.append(coordinate[2])
                     break

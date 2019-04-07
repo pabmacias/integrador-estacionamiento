@@ -22,6 +22,6 @@ class PlacesAPI(MethodView):
 
         self.logger.info("########## Places Called")
 
-        res = get_all_places(nparr, 0.5, 0.3)
+        res = get_all_places(nparr, 0.3, 0.3)
 
         return jsonify(res), 201

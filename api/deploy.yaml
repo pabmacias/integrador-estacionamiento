@@ -99,7 +99,7 @@ spec:
         - --name
         - app
         - --log-file=uni.log
-        image: gcr.io/midyear-task-234404/api:v1.0.2
+        image: gcr.io/midyear-task-234404/api:v1.1.0
         imagePullPolicy: IfNotPresent
         name: api
       terminationGracePeriodSeconds: 60
