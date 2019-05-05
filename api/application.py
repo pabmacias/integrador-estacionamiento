@@ -39,11 +39,13 @@ def create_app(config, debug=False, testing=False, config_overrides=None):
 
     # Import blueprints
     from places.views import places_app
+    from placesA1.views import placesA1_app
     from free.views import free_app
     from occupied.views import occupied_app
 
     # Register blueprint
     app.register_blueprint(places_app, url_prefix='/api/v1')
+    app.register_blueprint(placesA1_app, url_prefix='/api/v1')
     app.register_blueprint(free_app, url_prefix='/api/v1')
     app.register_blueprint(occupied_app, url_prefix='/api/v1')
 

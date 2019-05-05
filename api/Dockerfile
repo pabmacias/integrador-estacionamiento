@@ -14,3 +14,5 @@ ADD . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r /app/requirements.txt
+
+CMD ["gunicorn"  , "-b", "0.0.0.0:8080", "manage:app"]

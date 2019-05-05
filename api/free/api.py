@@ -12,7 +12,8 @@ class FreeAPI(MethodView):
             abort(400)
 
     def get(self):
-        places = get_all_free_places()
+        parking = request.args.get("parking")
+        places = get_all_free_places(parking)
         return jsonify(places), 200
 
     def post(self):

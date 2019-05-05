@@ -1,0 +1,55 @@
+swagger: "2.0"
+info:
+  title: "Parking Spaces"
+  description: "Get the available parking spaces."
+  version: "1.0.0"
+security:
+  - api_key: [AIzaSyC4tB_R74GxjwkXCouyPxfnV4ldnBMXFl4]
+host: "yolo-parking-pi.appspot.com"
+schemes:
+  - "https"
+paths:
+  "/api/v1/free":
+    get:
+      description: "Get the free parking spaces"
+      operationId: "freeSpaces"
+      produces:
+        - "application/json"
+      parameters:
+        -
+          name: parking
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: string
+        400:
+          description: "The parking is invalid or missing."
+  "/api/v1/occupied":
+    get:
+      description: "Get the occupied parking spaces"
+      operationId: "occupiedSpaces"
+      produces:
+        - "application/json"
+      parameters:
+        -
+          name: parking
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success."
+          schema:
+            type: string
+        400:
+          description: "The parking is invalid or missing."
+securityDefinitions:
+  # Basic authentication with an API key.
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"

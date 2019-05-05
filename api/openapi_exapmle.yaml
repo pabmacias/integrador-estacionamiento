@@ -1,0 +1,9 @@
+swagger: "2.0"
+info:
+  description: "A simple Google Cloud Endpoints API example."
+  title: "Endpoints Example"
+  version: "1.0.0"
+host: "echo-api.endpoints.midyear-task-234404.cloud.goog"
+x-google-endpoints:
+- name: "echo-api.endpoints.midyear-task-234404.cloud.goog"
+  target: "34.66.27.157"

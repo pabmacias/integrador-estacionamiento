@@ -4,7 +4,7 @@ import config
 
 #app = create_app(config, debug=('DEBUG' in os.environ and bool(os.environ['DEBUG'])))
 app = create_app(config, debug=True)
-port = int(os.getenv('PORT', 5000))
+port = int(os.getenv('PORT', 8080))
 
 
 @app.route('/')

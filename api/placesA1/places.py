@@ -7,7 +7,7 @@ import os
 from dbhelper.dbhelper import find_coordinates, occupy_space, free_space
 
 def get_all_places(image, minimun_confidence, threshold):
-    parking = 'youtube'
+    parking = 'a1'
 
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
@@ -49,17 +49,18 @@ def get_all_places(image, minimun_confidence, threshold):
     # print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
     coordinates = find_coordinates(parking)
+    print(coordinates)
 
     (w, h) = (15,15)
 
-    for i in range(len(coordinates)):
-        (x, y) = (coordinates[i][0], coordinates[i][1])
-        color = [234, 203, 92]
-        cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-        text = str(i)
-        cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5, color, 2)
-    cv2.imwrite('test.jpg', image)
+    # for i in range(len(coordinates)):
+    #     (x, y) = (coordinates[i][0], coordinates[i][1])
+    #     color = [234, 203, 92]
+    #     cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+    #     text = str(i)
+    #     cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+    #                 0.5, color, 2)
+    # cv2.imwrite('test.jpg', image)
 
     # initialize our lists of detected bounding boxes, confidences, and
     # class IDs, respectively
@@ -104,6 +105,7 @@ def get_all_places(image, minimun_confidence, threshold):
                             threshold)
 
     # ensure at least one detection exists
+    car_alerts = []
     if len(idxs) > 0:
         occupied = []
 
@@ -120,13 +122,22 @@ def get_all_places(image, minimun_confidence, threshold):
             # cv2.imwrite('test.jpg', image)
 
             for coordinate in coordinates:
+                alert = True
                 if coordinate[0] > x and coordinate[0] < x + w and coordinate[1] > y and coordinate[1] < y + h and LABELS[classIDs[i]] == "car":
                     occupy_space(coordinate[2], parking)
                     occupied.append(coordinate[2])
+                    alert = False
                     break
+            if alert and y > 300:
+                car_alerts.append([x, y, w, h])
+                # cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+                # text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
+                # cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                #             0.5, color, 2)
+                # cv2.imwrite('test.jpg', image)
         for coordinate in coordinates:
             if coordinate[2] not in occupied:
                 free_space(coordinate[2], parking)
-        return occupied
+        return occupied, car_alerts
 
-    return "Nothing changed"
+    return "Nothing changed", car_alerts
